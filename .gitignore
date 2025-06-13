@@ -42,3 +42,13 @@ data/processed/*
 # Temporary files
 temp/
 tmp/
+
+# Database dumps
+*.dump
+*.sql.bak
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# PostgreSQL
+*.pid
