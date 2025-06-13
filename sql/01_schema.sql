@@ -29,14 +29,14 @@ CREATE TABLE patients (
     city VARCHAR(50),
     state CHAR(2),
     zip_code VARCHAR(10),
-    phone_primary VARCHAR(20),
-    phone_secondary VARCHAR(20),
+    phone_primary VARCHAR(30),
+    phone_secondary VARCHAR(30),
     email VARCHAR(100),
     
     -- Emergency Contact
     emergency_contact_name VARCHAR(100),
     emergency_contact_relationship VARCHAR(50),
-    emergency_contact_phone VARCHAR(20),
+    emergency_contact_phone VARCHAR(30),
     
     -- Insurance
     insurance_provider VARCHAR(100),
@@ -63,7 +63,7 @@ CREATE TABLE providers (
     department VARCHAR(100),
     
     -- Contact
-    phone VARCHAR(20),
+    phone VARCHAR(30),
     email VARCHAR(100),
     pager VARCHAR(20),
     
@@ -84,7 +84,7 @@ CREATE TABLE units (
     unit_type VARCHAR(50), -- ICU, Med-Surg, ED, PACU, OR, etc.
     floor VARCHAR(10),
     building VARCHAR(50),
-    phone VARCHAR(20),
+    phone VARCHAR(30),
     total_beds INTEGER,
     is_active BOOLEAN DEFAULT TRUE
 );
@@ -212,7 +212,7 @@ CREATE TABLE lab_results (
     result_value VARCHAR(50),
     result_unit VARCHAR(50),
     result_status VARCHAR(20) CHECK (result_status IN ('Final', 'Preliminary', 'Corrected', 'Cancelled')),
-    abnormal_flag VARCHAR(10) CHECK (abnormal_flag IN ('Normal', 'Low', 'High', 'Critical Low', 'Critical High', 'Abnormal')),
+    abnormal_flag VARCHAR(20) CHECK (abnormal_flag IN ('Normal', 'Low', 'High', 'Critical Low', 'Critical High', 'Abnormal')),
     
     -- Reference Range
     reference_range_low NUMERIC,

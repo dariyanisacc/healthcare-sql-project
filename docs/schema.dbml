@@ -1,0 +1,210 @@
+// Healthcare Clinical Database Schema
+// Generated for dbdiagram.io
+
+Table patients {
+  patient_id int [pk, increment]
+  mrn varchar(20) [unique, not null]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  middle_name varchar(50)
+  date_of_birth date [not null]
+  sex char(1)
+  race varchar(50)
+  ethnicity varchar(50)
+  primary_language varchar(20)
+  ssn_last4 char(4)
+  street_address varchar(100)
+  city varchar(50)
+  state char(2)
+  zip_code varchar(10)
+  phone_primary varchar(30)
+  phone_secondary varchar(30)
+  email varchar(100)
+  emergency_contact_name varchar(100)
+  emergency_contact_relationship varchar(50)
+  emergency_contact_phone varchar(30)
+  insurance_provider varchar(100)
+  insurance_policy_number varchar(50)
+  created_at timestamp
+  updated_at timestamp
+  is_active boolean
+}
+
+Table providers {
+  provider_id int [pk, increment]
+  npi char(10) [unique]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  middle_name varchar(50)
+  title varchar(20)
+  specialty varchar(100)
+  department varchar(100)
+  phone varchar(30)
+  email varchar(100)
+  pager varchar(20)
+  hire_date date
+  is_active boolean
+  created_at timestamp
+}
+
+Table units {
+  unit_id int [pk, increment]
+  unit_code varchar(20) [unique, not null]
+  unit_name varchar(100) [not null]
+  unit_type varchar(50)
+  floor varchar(10)
+  building varchar(50)
+  phone varchar(30)
+  total_beds int
+  is_active boolean
+}
+
+Table encounters {
+  encounter_id int [pk, increment]
+  patient_id int [ref: > patients.patient_id, not null]
+  encounter_number varchar(30) [unique, not null]
+  encounter_type varchar(20) [not null]
+  admit_date timestamp [not null]
+  discharge_date timestamp
+  admitting_provider_id int [ref: > providers.provider_id]
+  attending_provider_id int [ref: > providers.provider_id]
+  current_unit_id int [ref: > units.unit_id]
+  room_number varchar(20)
+  bed_number varchar(10)
+  chief_complaint text
+  admission_source varchar(50)
+  discharge_disposition varchar(50)
+  encounter_status varchar(20)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table diagnoses {
+  diagnosis_id int [pk, increment]
+  encounter_id int [ref: > encounters.encounter_id, not null]
+  icd10_code varchar(10) [not null]
+  diagnosis_description text [not null]
+  diagnosis_type varchar(20)
+  diagnosed_date timestamp
+  diagnosed_by_provider_id int [ref: > providers.provider_id]
+  is_resolved boolean
+  resolved_date timestamp
+  
+  indexes {
+    (encounter_id, icd10_code, diagnosis_type) [unique]
+  }
+}
+
+Table medications {
+  medication_id int [pk, increment]
+  medication_name varchar(200) [not null]
+  generic_name varchar(200)
+  brand_name varchar(200)
+  medication_class varchar(100)
+  controlled_substance_schedule varchar(10)
+  default_route varchar(50)
+  default_form varchar(50)
+  is_high_alert boolean
+  is_active boolean
+  
+  indexes {
+    (medication_name, generic_name) [unique]
+  }
+}
+
+Table medication_administrations {
+  admin_id int [pk, increment]
+  encounter_id int [ref: > encounters.encounter_id, not null]
+  medication_id int [ref: > medications.medication_id, not null]
+  ordered_dose varchar(50) [not null]
+  ordered_unit varchar(20) [not null]
+  ordered_route varchar(50) [not null]
+  ordered_frequency varchar(50) [not null]
+  admin_date timestamp [not null]
+  admin_dose varchar(50)
+  admin_unit varchar(20)
+  admin_route varchar(50)
+  admin_site varchar(50)
+  ordering_provider_id int [ref: > providers.provider_id]
+  administering_provider_id int [ref: > providers.provider_id]
+  admin_status varchar(20)
+  hold_reason text
+  created_at timestamp
+}
+
+Table lab_results {
+  lab_id int [pk, increment]
+  encounter_id int [ref: > encounters.encounter_id, not null]
+  loinc_code varchar(20)
+  test_name varchar(200) [not null]
+  test_category varchar(100)
+  result_value varchar(50)
+  result_unit varchar(50)
+  result_status varchar(20)
+  abnormal_flag varchar(20)
+  reference_range_low numeric
+  reference_range_high numeric
+  collected_date timestamp [not null]
+  resulted_date timestamp
+  ordering_provider_id int [ref: > providers.provider_id]
+  created_at timestamp
+}
+
+Table vital_signs {
+  vital_id int [pk, increment]
+  encounter_id int [ref: > encounters.encounter_id, not null]
+  temperature_f numeric(4,1)
+  heart_rate int
+  respiratory_rate int
+  blood_pressure_systolic int
+  blood_pressure_diastolic int
+  oxygen_saturation int
+  pain_scale int
+  weight_kg numeric(5,2)
+  height_cm numeric(5,2)
+  bmi numeric(4,1)
+  position varchar(50)
+  oxygen_delivery varchar(50)
+  oxygen_flow_rate numeric(3,1)
+  recorded_date timestamp [not null]
+  recorded_by_provider_id int [ref: > providers.provider_id]
+}
+
+Table nursing_assessments {
+  assessment_id int [pk, increment]
+  encounter_id int [ref: > encounters.encounter_id, not null]
+  assessment_date timestamp [not null]
+  assessment_type varchar(50)
+  level_of_consciousness varchar(50)
+  orientation varchar(50)
+  fall_risk_score int
+  fall_risk_level varchar(20)
+  bed_alarm_on boolean
+  restraints_in_use boolean
+  skin_integrity varchar(50)
+  pressure_ulcer_present boolean
+  braden_score int
+  activity_level varchar(50)
+  gait_steady boolean
+  assistive_device varchar(50)
+  assessment_notes text
+  assessing_provider_id int [ref: > providers.provider_id]
+  created_at timestamp
+}
+
+Table allergies {
+  allergy_id int [pk, increment]
+  patient_id int [ref: > patients.patient_id, not null]
+  allergen varchar(200) [not null]
+  allergy_type varchar(50)
+  reaction varchar(200)
+  severity varchar(20)
+  onset_date date
+  reported_date timestamp
+  reported_by_provider_id int [ref: > providers.provider_id]
+  is_active boolean
+  
+  indexes {
+    (patient_id, allergen) [unique]
+  }
+}
