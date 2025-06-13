@@ -25,32 +25,35 @@ Model a realistic inpatient environment—patients, encounters, providers, diagn
 | **`tests/`** | pgTAP unit tests for schema and data integrity |
 | **`.github/workflows/`** | CI pipeline with automated testing |
 
-## 🏃‍♀️ Quick Start (5 minutes)
+## 🏃‍♀️ Quick Start
+
+### Option 1: Docker (Recommended)
 ```bash
 # 1. Clone the repo
 git clone https://github.com/dariyanisacc/healthcare-sql-project.git
 cd healthcare-sql-project
 
-# 2. Generate synthetic data
-cd scripts
-python generate_data.py
-python generate_encounters.py
-cd ..
-
-# 3. Create database and schema
-createdb healthcare_clinical
-psql -d healthcare_clinical -f sql/01_schema.sql
-psql -d healthcare_clinical -f sql/02_indexes.sql
-
-# 4. Load synthetic data
-psql -d healthcare_clinical -f sql/03_seed.sql
-
-# 5. Create analytics views
-psql -d healthcare_clinical -f sql/04_views.sql
-
-# 6. Run demo queries
-psql -d healthcare_clinical -f sql/05_demo_queries.sql
+# 2. Run automated setup
+./setup_docker.sh
 ```
+
+### Option 2: Local PostgreSQL
+```bash
+# 1. Clone the repo
+git clone https://github.com/dariyanisacc/healthcare-sql-project.git
+cd healthcare-sql-project
+
+# 2. Run automated setup
+./setup_and_test.sh
+```
+
+### Option 3: Manual Setup
+See [QUICKSTART.md](QUICKSTART.md) for step-by-step instructions.
+
+### 📖 Platform-Specific Guides
+- **macOS Setup**: [docs/SETUP_MACOS.md](docs/SETUP_MACOS.md)
+- **DBeaver Setup**: [docs/DBEAVER_SETUP.md](docs/DBEAVER_SETUP.md)
+- **Docker Details**: [setup_docker.sh](setup_docker.sh)
 
 *Everything runs on a laptop—no cloud account required.*
 
